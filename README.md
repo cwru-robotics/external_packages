@@ -1,4 +1,4 @@
-turbo-ros-pkg
+some additional external, source-file packages used at CWRU
 =============
 
-ROS software repository, Robotics &amp; Biology Laboratory, TU Berlin
+includes example dynamixel motor driver/controller
