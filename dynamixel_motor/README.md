@@ -10,6 +10,7 @@ first, enable the USB port for user I/O with:
 
 start the controller interface node:
 `roslaunch dynamixel_controllers controller_manager.launch`
+(make sure the *.py nodes are executable)
 
 Default mount point for usb2dynamixel is at /dev/ttyUSB0. You can change this in controller_manager.launch (path: dynamixel_controllers/launch/controller_manager.launch)
 
