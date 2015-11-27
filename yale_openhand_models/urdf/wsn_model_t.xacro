@@ -10,13 +10,21 @@
 
   <!--<xacro:include filename="gripper.gazebo" /-->
   <!-- xacro:include filename="$(find yale_openhand_models)/urdf/gripper.gazebo" / --> 
+    <!-- wsn, copy and paste instead -->
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>gripper</robotNamespace>
+    </plugin>
+  </gazebo>
   
   <xacro:property name="controller" value="EffortJointInterface" />
   
   <xacro:macro name="trans" params="joint_name">
     <transmission name="${joint_name}_trans">
       <type>transmission_interface/SimpleTransmission</type>
-      <joint name="${joint_name}"/>
+      <joint name="${joint_name}">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+       </joint>
       <actuator name="${joint_name}_actuator">
 	<hardwareInterface>${controller}</hardwareInterface>
 	<mechanicalReduction>1</mechanicalReduction>
@@ -34,8 +42,8 @@
   <link name="d1_a_t">
     <inertial>
       <origin rpy="0 0 0" xyz="0 0 0" />
-      <mass value="1e-2" />
-      <inertia ixx="1e-3" ixy="0" ixz="0" iyy="1e-3" iyz="0" izz="1e-3" />
+      <mass value="1e-1" />
+      <inertia ixx="1e-2" ixy="0" ixz="0" iyy="1e-2" iyz="0" izz="1e-2" />
     </inertial>
     <visual>
       <origin rpy="0 0 0" xyz="0 0 ${stl_scale_factor * 29}" />
@@ -134,8 +142,8 @@
     <link name="prox_phal_${prefix}">
       <inertial>
 	<origin rpy="0 0 0" xyz="0 0 0" />
-	<mass value="1e-2" />
-	<inertia ixx="1e-4" ixy="0" ixz="0" iyy="1e-4" iyz="0" izz="1e-4" />
+	<mass value="1e-1" />
+	<inertia ixx="1e-2" ixy="0" ixz="0" iyy="1e-2" iyz="0" izz="1e-2" />
       </inertial>
 
       <visual>
@@ -178,8 +186,8 @@
     <link name="dist_phal_${prefix}">
       <inertial>
 	<origin rpy="0 0 0" xyz="0 0 0" />
-	<mass value="1e-2" />
-	<inertia ixx="1e-4" ixy="0" ixz="0" iyy="1e-4" iyz="0" izz="1e-4" />
+	<mass value="1e-1" />
+	<inertia ixx="1e-2" ixy="0" ixz="0" iyy="1e-2" iyz="0" izz="1e-2" />
       </inertial>
 
       <visual>
@@ -213,4 +221,4 @@
 
   </xacro:macro>
   </robot>
-<!--/robot -->
+

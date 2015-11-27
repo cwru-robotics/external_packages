@@ -1,0 +1,73 @@
+yale gripper notes
+
+modified files: 
+  created position instead of effort controllers in wsn_gripper_control.yaml
+   increased inertias/masses and adjusted control params
+   define "base_link" as "gripper_base_link"
+   added line in transmission fields of wsn_model_t.xacro
+        <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${joint_name}">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+       </joint>
+     
+   
+  
+roslaunch yale_openhand_models wsn_gripper_gazebo.launch 
+
+this brings up the gripper alone, plus its controllers
+
+Can then control finger angles, e.g. with:
+  rostopic pub /gripper/dc_second_joint_effort_controller/command std_msgs/Float64 0.0
+  rostopic pub /gripper/mcp_first_joint_effort_controller/command std_msgs/Float64 1.0
+  
+  things needed in launch:
+  
+  *put robot in param server (unless included in baxter model)
+  *spawn model into gazebo (unless included in baxter model)
+  
+  *include wsn_gripper_control.launch:
+    <!-- Start the controllers for the Yale openhand gripper !-->
+  <include file="$(find yale_openhand_models)/launch/wsn_gripper_control.launch">
+  </include>
+  
+   OR do the following: 
+    *put controller params in param server via launch line:
+       <rosparam file="$(find yale_openhand_models)/config/wsn_gripper_control.yaml" command="load" />
+
+     *remap joint_states topic w/ launch cmd:
+        <node name="robot_state_publisher2" pkg="robot_state_publisher"         
+          type="robot_state_publisher"        
+          respawn="false" output="screen">
+          <remap from="joint_states" to="/gripper/joint_states" />
+        </node>
+   
+   -------------------
+   tried this in: 
+   roslaunch cwru_baxter_sim baxter_world_test.launch
+   
+   this refers to file: cwru_baxter_w_gripper2.urdf.xacro, which includes:
+     * attach gripper to right arm:
+   
+       <!-- wsn: try adding Yale gripper components-->
+     <joint name="attach_gripper" type="fixed">
+       <parent link="right_hand" />
+       <child link="gripper_base_link" />
+     </joint> 
+  
+    *include the yale hand model file:
+      <xacro:include filename="$(find yale_openhand_models)/urdf/wsn_model_t.xacro"/>
+      
+    this worked (w/ gazebo and rviz) and responded to:
+    
+    rostopic pub /gripper/mcp_first_joint_effort_controller/command std_msgs/Float64 0.0
+
+copied baxter_world_test.launch to baxter_w_gripper.launch
+  need these files:
+  cwru_baxter_sim/baxter_w_gripper.launch
+  cwru_baxter_sim/cwru_baxter_w_gripper.urdf.xacro
+  
+  $(find yale_openhand_models)/launch/wsn_gripper_control.launch
+  $(find yale_openhand_models)/config/wsn_gripper_control.yaml
+  $(find yale_openhand_models)/urdf/wsn_model_t.xacro
+  
+
